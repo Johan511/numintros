@@ -7,7 +7,7 @@ class NumIntros:
         self.inFile = open(inPath, "r")
         self.outFile = open(outPath, "w")
         self.num_intros = {}
-        self.state = 'searching'
+        self.state = 'searching for start'
 
 
     def read(self):
@@ -20,15 +20,16 @@ class NumIntros:
 
         
     def found_start(self, key):
-        self.state = 'searching'
+        self.state = 'searching for tag'
         i = 1
         while(self.state != 'found start'):
             if(re.search(NumIntros.regex_intro,  
-            self.lines[self.line_index  + i].upper()) != None):
+            self.lines[self.line_index  + i].upper()) != None and self.state == 'searching for tag'):
                 if(key not in self.num_intros):
                     self.num_intros[key] = 1
                 else:
                     self.num_intros[key] +=1
+                self.state = 'searching for start'
             if(re.match(NumIntros.regex_new_num,  
             self.lines[self.line_index + i].upper()) != None):
                 self.state = 'found start'
